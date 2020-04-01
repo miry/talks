@@ -1,0 +1,129 @@
+# Integrate Sentry in GO
+Examples of Sentry integrations
+16:00 2 Apr 2020
+Tags: golang, sentry, logger, zerlog, pkgerrors
+Summary: How to start using Sentry from scratch
+OldURL: former-path-for-this-doc
+
+Michael Nikitochkin
+SRE, Zalando SE
+michael.nikitochkin@zalando.de
+https://medium.com/@miry
+@miry_sof
+
+## Agenda
+
+1. What is Sentry?
+1. Sentry essentials
+1. Example of an integration
+1. It is time for panic
+1. Initialize Sentry
+1. Capture all errors from the logger
+1. Use errors with stack traces
+
+## What is Sentry?
+
+**Sentry** is an exception manager. It allows you to analyze errors from applications.
+
+**Features**
+
+1. Opensource
+1. Collect errors with stack traces
+1. Group excpetions and record all occurances
+1. Show stack traces and context
+1. Analytics page for exceptions
+1. Clients available for most of popular programming languages
+
+## Zalando deployment
+
+Every team can deploy own *Sentry* cluster.
+
+There is a central cluster for all zalando team available via [sentry.stups.zalan.do](https://sentry.stups.zalan.do/).
+It is managed by team Metrics and Tracing (former Eagleeye).
+
+## Sentry essentials
+
+**Team**
+
+Before start with **Sentry**, there is should be a team existing.
+To create a team, and to change role for an user you should create via [Github issue](https://github.bus.zalan.do/eagleeye/Sentry/issues/new/choose).
+
+**Project**
+
+Project is an entity that will collect all error events from the application.
+Choose the GO language in the list and specify the team name.
+You should extract the **DSN** value,
+
+You can find the **DSN** for your project by url template: `https://sentry.stups.zalan.do/settings/zalando/<project_slug>/keys/`
+
+## Example of an integration
+
+.code sample.go /START OMIT/,/END OMIT/
+
+## It is time for panic
+## Init a web application
+
+Get the sample code form [Gin Getting started page](https://gin-gonic.com/docs/quickstart/#getting-started)
+
+.code 01_server.go
+
+## It is time for panic
+
+Add custom endpoints with panic and error examples
+
+.code 02_server.go /^func main/,/^}/
+
+## Initialize Sentry
+## Initialize Sentry
+
+[Sentry initialization for gin application](https://docs.sentry.io/platforms/go/gin/)
+
+.code 03_server.go /^func initSentry/,/^}/
+
+## Catch panic
+
+[Sentry initialization for gin application](https://docs.sentry.io/platforms/go/gin/)
+
+.code 03_server.go /START GIN OMIT/,/END GIN OMIT/
+
+Usage: `SENTRY_DSN=<url> go run 03_server.go`
+
+## Capture all errors from the logger
+
+.code 04_server.go /^func initLogger/,/^}/
+
+Add a new endpoint to log some errors
+
+.code 05_server.go /START OMIT/,/END OMIT/
+
+<pre>
+[Sentry] 2020/03/31 23:02:34 Sending error event [xxx] to sentry.stups.zalan.do project: xxxx
+{"level":"warn","error":"Something does not work but we can handle","endpoint":"error_log",...
+</pre>
+
+## Use errors with stack traces
+## Wrap error
+
+Add the case of wrapping errors
+
+.code 05_server.go /^func processRequest/,/^}/
+
+.code 05_server.go /START OMIT/,/END OMIT/
+
+In the UI stacktrace would pointed to `sentry.CaptureException(err)`
+
+## Errors with stack trace
+
+Use the [errors with stack trace](https://github.com/pkg/errors) with small changes in the endpoint
+
+.code 06_server.go /^import \(/,/^\)/
+.code 06_server.go /START OMIT/,/END OMIT/
+
+## Errors with stack trace
+
+It shows in the Sentry exactly where the errors were created or wrapped.
+There are 2 events would be in Sentry.
+
+First event points to `errors.Wrap(err, "Access Denied")`.
+
+Second one points to `errors.New("Huston we have a problem")`.
