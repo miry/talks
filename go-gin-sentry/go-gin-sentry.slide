@@ -29,14 +29,14 @@ https://medium.com/@miry
 
 1. Opensource
 1. Collect errors with stack traces
-1. Group excpetions and record all occurances
+1. Group exceptions and record all occurrences
 1. Show stack traces and context
 1. Analytics page for exceptions
-1. Clients available for most of popular programming languages
+1. Clients available for most popular programming languages
 
 ## Zalando deployment
 
-Every team can deploy own *Sentry* cluster.
+Every team can deploy its own *Sentry* cluster.
 
 There is a central cluster for all zalando team available via [sentry.stups.zalan.do](https://sentry.stups.zalan.do/).
 It is managed by team Metrics and Tracing (former Eagleeye).
@@ -45,16 +45,16 @@ It is managed by team Metrics and Tracing (former Eagleeye).
 
 **Team**
 
-Before start with **Sentry**, there is should be a team existing.
-To create a team, and to change role for an user you should create via [Github issue](https://github.bus.zalan.do/eagleeye/Sentry/issues/new/choose).
+Before starting with **Sentry**, there is should be a team existing.
+To create a team, and to change the role for a user you should create via [Github issue](https://github.bus.zalan.do/eagleeye/Sentry/issues/new/choose).
 
 **Project**
 
-Project is an entity that will collect all error events from the application.
+The project is an entity that will collect all error events from the application.
 Choose the GO language in the list and specify the team name.
 You should extract the **DSN** value,
 
-You can find the **DSN** for your project by url template: `https://sentry.stups.zalan.do/settings/zalando/<project_slug>/keys/`
+You can find the **DSN** for your project by URL template: `https://sentry.stups.zalan.do/settings/zalando/<project_slug>/keys/`
 
 ## Example of an integration
 
@@ -110,7 +110,7 @@ Add the case of wrapping errors
 
 .code 05_server.go /START OMIT/,/END OMIT/
 
-In the UI stacktrace would pointed to `sentry.CaptureException(err)`
+In the UI stacktrace would be pointed to `sentry.CaptureException(err)`
 
 ## Errors with stack trace
 
@@ -122,8 +122,8 @@ Use the [errors with stack trace](https://github.com/pkg/errors) with small chan
 ## Errors with stack trace
 
 It shows in the Sentry exactly where the errors were created or wrapped.
-There are 2 events would be in Sentry.
+There are 2 events that will be in Sentry.
 
-First event points to `errors.Wrap(err, "Access Denied")`.
+The first event points to `errors.Wrap(err, "Access Denied")`.
 
-Second one points to `errors.New("Huston we have a problem")`.
+The second one points to `errors.New("Huston we have a problem")`.
